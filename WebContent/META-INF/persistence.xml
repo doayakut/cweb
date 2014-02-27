@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+
+  <persistence-unit name="testunit">
+    <jta-data-source>java:openejb/Resource/ColorWebDS</jta-data-source>
+    <non-jta-data-source>testDatabaseUnmanaged</non-jta-data-source>
+    
+    <class>cweb.jpa.User</class>
+    <properties>
+	<property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)" />
+     <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
+    </properties>
+  </persistence-unit>
+</persistence>

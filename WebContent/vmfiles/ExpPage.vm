@@ -1,0 +1,85 @@
+<html>
+    <head>
+    <title>Template</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="http://fonts.googleapis.com/css?family=Capriola" rel="stylesheet" type="text/css">
+        <script src="http://code.jquery.com/jquery.js"></script>
+    </head>
+    <body>
+        <div style="background:#eee; padding: 0.5em; margin-bottom: 1em; color: #000; height:44px;">
+			
+				#if($user.state == "TRAINING")
+					#set($pagenum = $user.task + 1)
+				<span style="font-family: Arial; font-size: 1.2em; ">Training Page : Version $pagenum</span>
+				#else
+                    #set( $pagenum = $user.task / 3 + 1)
+                    #set( $vernum = $user.task % 3 + 1) 
+				<span style="font-family: Arial; font-size: 1.2em; ">Page # $pagenum : Version $vernum</span>
+				#end
+				<a href="/cweb/home?action=exp" style="float:right" id="mybutton">Next</a>
+        </div>
+        <hr style="margin:0px;"/>
+		
+        <div  id="content">
+        </div>
+    </body>
+</html>
+#set ( $d = "$")
+
+<script>
+var tid = setInterval(mycode, 2000);
+
+function mycode() {
+
+  ${d}.get("/cweb/home?action=checkin",function(data,status){
+  	if($user.task != data){
+		location.reload();
+	}
+  });
+}
+function abortTimer() { // to be called when you want to stop the timer
+}
+</script>
+
+
+<script>
+    $('#content').load('/cweb/testpages' + '$url.html', function() {
+    });   
+	$('#content').unbind();
+
+</script>
+<script>
+    $("#mybutton").removeClass();
+    $("#mybutton").css('display','inline-block');
+    $("#mybutton").css('font-family','sans-serif');
+    $("#mybutton").css('font-weight','400');
+    $("#mybutton").css('font-size','1em');
+    $("#mybutton").css('*display','inline');
+    $("#mybutton").css('*zoom','1');
+    $("#mybutton").css('padding','4px 12px');
+    $("#mybutton").css('font-size','1.2em');
+    $("#mybutton").css('line-height','20px');
+    $("#mybutton").css('text-align','center');
+    $("#mybutton").css('vertical-align','middle');
+    $("#mybutton").css('cursor','pointer');
+    $("#mybutton").css('color','#111');
+    $("#mybutton").css('text-shadow','0 1px 1px rgba(255, 255, 255, 0.75)');
+    $("#mybutton").css('background-color','#fff');
+    $("#mybutton").css('background-repeat','repeat-x');
+    $("#mybutton").css('*background-color','#e6e6e6');
+    $("#mybutton").css('border','1px solid #333');
+    $("#mybutton").css('*border','0');
+    $("#mybutton").css('border-bottom-color','#b3b3b3');
+    $("#mybutton").css('-webkit-border-radius','4px');
+    $("#mybutton").css('-moz-border-radius','4px');
+    $("#mybutton").css('*margin-left','.3em');
+    $("#mybutton").css('-webkit-box-shadow','inset 0 1px 0 rgba(255,255,255,.8), 0 1px 2px rgba(0,0,0,.05)');
+    $("#mybutton").css('-moz-box-shadow','inset 0 1px 0 rgba(255,255,255,.8), 0 1px 2px rgba(0,0,0,.05)');
+    $("#mybutton").css('box-shadow','inset 0 1px 0 rgba(255,255,255,.8), 0 1px 2px rgba(0,0,0,.05)');
+</script>
+<script>
+    $(document).ready(function () {
+    $('head').append('<link rel="stylesheet" type="text/css" href="/cweb/testpages$url.css" >');
+    });
+</script>

@@ -1,0 +1,27 @@
+
+body {
+	background-color: #ffffff;
+	font-size: 16px;
+	line-height: 26px;
+}
+
+a {
+	color: #25c;
+}
+
+.first {
+	width: 20px;
+	text-align: left;
+}
+
+.first > a {
+	text-decoration: none;
+}
+
+tr, div, td, table, tbody, th {
+	margin: 0px !important;
+	padding: 0px !important;
+}
+.readable:focus{
+    background-color: #eee;
+}

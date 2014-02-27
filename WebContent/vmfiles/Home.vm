@@ -1,0 +1,117 @@
+
+<div class="row" style="margin-top:4em; padding:1em">
+	<div class="col-md-12 col-sm-12 col-xs-12">
+		
+			
+        #if($user)
+        	#if($user.task < $max)
+        		<a href="/cweb/home?action=exp">Continue</a>
+        	#else
+        		<span class="lead">Experiment completed. Thank you for your cooperation.</span><br/><br/>
+        		<div class="text-center">
+        			<a class="btn btn-primary" href="/cweb/home?action=logout">End</a>
+        		</div>
+        	#end
+        #else
+            #if($usertype != "admin")
+    			<form method="post" action="/cweb/home" class=" text-center">
+            		<input type="hidden" name="action" value="login"/>
+                	<input class="form-control" type="text" name="name" placeholder="user ID" required/><br/>
+                	<input class="btn btn-primary" type="submit" value="Start Experiment">
+                </form>
+    		#else
+    			<h1>Researcher page</h1>
+				<form method="post" id="form-signup" action="/cweb/home" class=" text-center">
+            		<input type="hidden" name="action" value="signup"/>
+				</form>
+				#foreach( $p in $participants )
+					<form method="post" id="form-edit-$p.id" action="/cweb/home" class=" text-center">
+						<input type="hidden" name="action" value="edit"/>
+					</form>
+				#end
+				<table class="table table-striped table-condensed">
+					<thead>
+                        <tr>
+                          <th>Username</th>
+                          <th>CV Type</th>
+                          <th>Gender</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+				#foreach( $p in $participants )
+				<tr #if($highlightid == $p.id) class="success" #end>
+					<td><span class="field-text $p.id">$p.name</span>
+						<input type="text" class="field $p.id form-control input-sm" id="newname" name="newname" placeholder="$p.name" value="$p.name" form="form-edit-$p.id" hidden />
+                    </td>
+					<td><span class="field-text $p.id">$p.cvtype</span>
+						<select  class="field $p.id form-control input-sm" form="form-edit-$p.id" name="newcvtype" hidden>
+                          <option value="NORMAL" #if($p.cvtype == "normal") selected #end>Normal</option>
+                          <option value="PROTANOPIA"#if($p.cvtype == "protanopia") selected #end>Protanopia</option>
+                          <option value="DEUTERANOPIA"#if($p.cvtype == "deuteranopia") selected #end>Deuteranopia</option>
+                          <option value="TRITANOPIA"#if($p.cvtype == "tritanopia") selected #end>Tritanopia</option>
+                        </select>
+					</td>
+					<td><span class="field-text $p.id">$p.gender</span>
+						<select  class="field $p.id form-control input-sm" form="form-edit-$p.id" name="newgender" hidden>
+                          <option value="FEMALE" #if($p.gender == "female") selected #end>Female</option>
+                          <option value="MALE" #if($p.gender == "male") selected #end>Male</option>
+					</select>
+					</td>
+					<td style="max-width:60px; min-width:60px;">
+						<button class="btn btn-sm field-edit-button $p.id" id="$p.id"><i class="fa fa-pencil"></i> Edit</button>
+						<button form="form-edit-$p.id" type="submit" class="btn btn-sm field-edit-save-button $p.id"><i class="fa fa-floppy-o"></i> Save</button>
+						<button class="btn btn-sm field-edit-cancel-button $p.id"  id="$p.id"><i class="fa fa-floppy-o"></i> Cancel</button>
+                    </td>
+				</tr>
+				#end
+				<tr></tr>
+				<tr></tr>
+				<tr>
+					<td><input type="text" class="form-control input-sm" id="newname" name="newname" placeholder="Enter username" form="form-signup"/></td>
+					<td><select  class="form-control input-sm" form="form-signup" name="newcvtype">
+						  <option  disabled selected>----</option>
+                          <option value="NORMAL">Normal</option>
+                          <option value="PROTANOPIA">Protanopia</option>
+                          <option value="DEUTERANOPIA">Deuteranopia</option>
+                          <option value="TRITANOPIA">Tritanopia</option>
+                        </select></td>
+					<td><select  class="form-control input-sm" form="form-signup" name="newgender">
+						  <option  disabled selected>----</option>
+                          <option value="FEMALE">Female</option>
+                          <option value="MALE">Male</option>
+					</select></td>
+					
+					<td><button form="form-signup" type="submit" class="btn btn-sm"><i class="fa fa-floppy-o"></i> Save</button></td>
+				</tr>
+				</table>
+    		#end
+        #end
+		<script>
+    		$('.field').hide();
+    		$('.field-edit-save-button').hide();
+    		$('.field-edit-cancel-button').hide();
+    		$('.field-edit-button').show();
+			
+			
+			$('.field-edit-button').click(function(){
+				var id = $(this).attr("id");
+				$('.field-text.' + id).hide();
+				$('.field.' + id).show();
+				$(this).hide();
+				$('.field-edit-cancel-button.' + id).show();
+				$('.field-edit-save-button.' + id).show();
+			});
+			$('.field-edit-cancel-button').click(function(){
+				var id = $(this).attr("id");
+				$('.field-text.' + id).show();
+				$('.field.' + id).hide();
+				$(this).hide();
+				$('.field-edit-save-button.' + id).hide();
+				console.log('.field-edit-save-button.' + id + ' hiding');
+				$('.field-edit-button.' + id).show();
+				console.log('.field-edit-button.' + id + ' showing');
+				
+			});
+		</script>
+	</div>
+</div>

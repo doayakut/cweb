@@ -1,0 +1,41 @@
+
+<html>
+    <head>
+        <meta charset='utf-8'></meta>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>color web</title>	
+		
+		<!--
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css">
+		<link href="https://dl.dropboxusercontent.com/u/1043581/css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/exp.css" rel="stylesheet">
+		
+        <script src="https://dl.dropboxusercontent.com/u/1043581/js/jquery-2.0.3.min.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+		-->
+		
+        <link href="http://fonts.googleapis.com/css?family=Capriola" rel="stylesheet" type="text/css">
+		
+		
+        <link href="/cweb/offline/css/bootstrap.min.css" rel="stylesheet"> 
+        <link href="/cweb/offline/css/font-awesome.min.css" rel="stylesheet">
+		<link href="/cweb/offline/css/slider.css" rel="stylesheet" />
+		
+        <script src="/cweb/offline/js/jquery-2.0.3.min.js"></script>
+        <script src="/cweb/offline/js/bootstrap.min.js"></script>
+		<script src="/cweb/offline/js/modernizr.js"></script>	
+		<script src="/cweb/offline/js/tempscript.js"></script>
+		<script src="/cweb/offline/js/bootstrap-slider1.js"></script>
+   
+    </head>
+    <body style="padding:0;">
+		
+        #if($message)       
+    		<div class="alert $message.type alert-dismissable"> 
+				  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+$message.content</div> 
+		#end
+		
+		$content
+         </body>
+</html>

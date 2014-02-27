@@ -1,0 +1,183 @@
+
+		<style>
+	.value{
+		text-align:center; 
+		background:#c1dbf2; 
+		padding:5px;
+		padding-bottom:1px;
+		border-radius:15px;
+		font-weight: bold;
+		letter-spacing: 2px;
+		padding-left:7px;
+		}
+	.minmax{ 
+		color: black;
+		background:#eee; 
+		padding:5px; 
+		border-radius:15px;
+	}
+	hr { display: block; height: 1px;
+    border: 0; margin: 0; margin-bottom: 0.1em;
+	background-color: #000; color: #000;}
+</style>
+        <hr style="margin:0px;"/>
+        <div class="container" id="content">
+			<form action="/cweb/home?action=answer" id="evalForm" method="post">
+                <input type="hidden" name="action" value="answer"/>
+				#if($user.state == "TRAINING")
+					#set($pagenum = $user.task + 1)
+				<h2>Training Page : Version $pagenum</h2>
+				#else
+					#if($user.task == 54)
+						<h2>Questionnaire</h2>
+					#else
+                        #set( $pagenum = $user.task / 3 + 1)
+                        #set( $vernum = $user.task % 3 + 1) 
+    					<h2>Page # $pagenum : Version $vernum</h2>
+					#end
+				#end
+				<!--<ul class="pager">
+                  <li class="previous disabled"><a href="#" onclick="prevDiv()">&larr; Previous</a></li>
+                  <li class="next"><a href="#" onclick="nextDiv()">Next &rarr;</a></li>
+				</ul> -->
+                #foreach($qn in $questionnaires)
+					#set($qnid = $foreach.count)
+					<hr/><hr/>
+					<div id="qn$qnid" > 
+						<h4><span id="currDiv">1</span> / $questionnaires.size() $qn.label</h4>
+						#foreach($q in $qn.questions)
+						
+                            #set($min = -5)
+                    		#set($max = 5)
+                            #set($mid = 0)
+							<div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 0.5em">
+                                    <span style="font-size:1.2em">#if("$q.text" != "")<hr/>
+                                            <strong>$q.text</strong><br/>
+                                    #end</span>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 0.5em">
+                                    <span class=" " style="width:200px;"> <strong>$q.minLabel</strong> </span>
+                                    <span class="  pull-right" ><strong>$q.maxLabel</strong></span>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 0.5em">
+                                    <span class="muted " style="width:200px;"><span class="minmax">$min</span></span>
+                                    <span class="value  $q.id"> $mid </span>
+                                    <span class="muted  pull-right" ><span class="minmax">$max</span></span>
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12" style="margin-top: 0.5em">
+                                    <input type="text"  class="slider input-block-level" value="$mid" data-slider-min="$min" data-slider-max="$max" data-slider-step="0.1" data-slider-value="23"  data-slider-selection="after" data-slider-tooltip="hide" data-slider-id="$q.id" name="$q.id" id="$q.id"/>
+                                </div>
+                            </div>
+                    		<br/>
+                        #end
+					</div>
+				#end
+				<hr/><hr/>
+				<div style="text-align: center">
+					<button class="btn btn-primary btn-lg" type="submit">Submit Answers & NEXT</button>
+				</div>
+                
+               
+            </form> 
+
+        </div>
+		
+		<script>
+			if(typeof(Storage)!=="undefined"){
+				localStorage.currDiv = 1;
+				if($questionnaires.size() == 1){
+					$('.previous').hide();
+					$('.next').html('<a href="#" onclick="nextDiv();">Submit!!!</a>');
+				}
+			}
+			else{
+			}
+
+			
+			function nextDiv(){
+				if(typeof(Storage)!=="undefined"){
+					$('.previous').removeClass('disabled');
+					$('.next').removeClass('disabled');
+					$('.next').html('<a href="#" onclick="nextDiv()">Next &rarr;</a>');
+					
+					var currdiv = Number(localStorage.currDiv);
+					
+					if( currdiv == $questionnaires.size() ) {
+						document.getElementById("evalForm").submit();
+						return;
+					}
+  					if (currdiv < $questionnaires.size()){
+    					currdiv=currdiv+1;
+					}
+					if( currdiv == $questionnaires.size() ) {
+						$('.next').html('<a href="#" onclick="nextDiv();">Submit!!!</a>');
+					}
+					
+					$("div[id^='qn']").hide();
+					$("div#qn" + currdiv).show();
+					$("span#currDiv").text(currdiv);
+					localStorage.currDiv = currdiv;
+				}
+			}
+			function prevDiv(){
+				if(typeof(Storage)!=="undefined"){
+					$('.previous').removeClass('disabled');
+					$('.next').removeClass('disabled');
+					$('.next').html('<a href="#" onclick="nextDiv()">Next &rarr;</a>');
+					
+					var currdiv = Number(localStorage.currDiv);
+  					if (currdiv > 1){
+    					currdiv=currdiv-1;
+					}
+					if (currdiv == 1){
+						$('.previous').addClass('disabled');
+					}
+					
+					$("div[id^='qn']").hide();
+					$("div#qn" + currdiv).show();
+					$("span#currDiv").text(currdiv);
+					localStorage.currDiv = currdiv;
+				}
+			}
+			
+			$("div#qn1").show();
+		</script>
+    
+		     
+            	<script>
+            		$('.slider').slider().slider('setValue',0);;
+            	</script>
+				<!-- <script>
+                    $(window).resize(function() {
+                    
+            		$('.slider').width(  $(window).width() - 24 + "px" );
+					$('span.value').css('position', 'relative');
+					var offset = $(window).width() / 2.0 - 10;
+					console.log(offset);
+            		$('span.value').offset({ left: $(window).width() / 2 - 10 });
+            		$('span.value').each(function(){
+						console.log($(this).css('left'));
+					});
+            
+                    }); 
+					
+				</script> -->
+                <script>
+                $().ready(function() {
+                    
+            		$('.slider').width(  $(window).width() - 130 + "px" );
+					
+					$('span.value').css('position', 'absolute');
+					var offset = $(window).width() / 2.0 - 10;
+            		
+            		$('span.value').each(function(){
+						$(this).offset({ left: offset });
+					});
+                });
+                </script>
+                <script>
+                    $('.slider').bind( "contentchange", function(e,val){
+                    $('span.' + $(this).attr('id')).text(Math.round(val*100)/100);
+                    });
+                </script>

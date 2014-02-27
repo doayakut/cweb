@@ -1,0 +1,24 @@
+<style>
+	.choice-div {
+		text-align:center;
+	}
+	.choice {
+		font-size: 1em;
+		text-align:center; 
+	}
+</style>
+<div class="row" style="margin-top:4em; padding:1em">
+	<div class="col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10 col-xs-12 choice-div" >
+		<a class="btn btn-primary choice" href="/cweb/home?action=exp">
+			On Mobile <br/> <br/>
+			<span style="font-size: 3em;"><i class="fa fa-mobile"></i></span>
+		</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-primary choice"  href="/cweb/home?action=eval">
+			On Desktop <br/> <br/>
+            <span style="font-size: 3em;"><i class="fa fa-desktop"></i></span>
+		</a>
+		
+    </div>
+</div>
+			

@@ -30,6 +30,8 @@ public class Answer {
 	private User user;
 	
 	private Float value;
+	
+	private int viewIndex;
 
 	public long getId() {
 		return id;
@@ -63,8 +65,16 @@ public class Answer {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public int getViewIndex() {
+		return viewIndex;
+	}
+
+	public void setViewIndex(int viewIndex) {
+		this.viewIndex = viewIndex;
+	}
 	
-	
+
 
 	
 }

@@ -1,3 +1,6 @@
+# build directory
+build/
+
 *.jar
 *.pydevproject
 .metadata
@@ -32,5 +35,4 @@ local.properties
 
 *.DS_Store
 
-# build directory
-build/
+

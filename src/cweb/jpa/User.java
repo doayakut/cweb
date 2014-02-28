@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Hashtable;
 
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 import cweb.jpa.enums.Order;
 
 @Entity
-@Table(name = "User")
+@Table(name = "users")
 public class User implements Comparable<User> {
 
 	@Id
@@ -35,11 +36,14 @@ public class User implements Comparable<User> {
 
 
 	@Enumerated(EnumType.STRING)
+    @Column(name = "method_order")
 	private Order methodOrder;
 
 	@Enumerated(EnumType.STRING)
+    @Column(name = "page_order")
 	private Order pageOrder;
 
+    @Column(name = "date_created")
 	private Date createDate;
 	
 

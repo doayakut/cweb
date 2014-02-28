@@ -13,16 +13,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import cweb.jpa.enums.Question;
+
 @Entity
-@Table(name = "Answer")
+@Table(name = "answers")
 public class Answer {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ans_id")
+    @Column(name = "answer_id")
 	private long id;
 	
 	@Enumerated(EnumType.STRING)
+    @Column(name = "question")
 	private Question question;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +32,8 @@ public class Answer {
 	private User user;
 	
 	private Float value;
-	
+
+    @Column(name = "view_index")
 	private int viewIndex;
 
 	public long getId() {

@@ -31,3 +31,6 @@ local.properties
 .texlipse
 
 *.DS_Store
+
+# build directory
+build/

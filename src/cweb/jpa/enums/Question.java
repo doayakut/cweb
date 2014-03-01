@@ -20,7 +20,7 @@ public enum Question {
 	Question11("4-3","","Frustrating","Satisfying"), 
 	Question12("4-4","","Dull","Stimulating"), 
 	Question13("4-5","","Unpleasant","Pleasant"), 
-	Question14("4-6","","Visually Unacceptable","Visually Exceptable"), 
+	Question14("4-6","","Visually unacceptable","Visually acceptable"), 
 	Question15("5-1","","Hardly differentiable","Easily differentiable"), 
 	Question16("5-2","","Confusing","Clear"),
 	Question17("5-3","","Has poor contrast", "Has excellent contrast"),

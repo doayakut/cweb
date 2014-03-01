@@ -10,6 +10,7 @@ import cweb.strategy.Answer;
 import cweb.strategy.BaseStgy;
 import cweb.strategy.Checkin;
 import cweb.strategy.Edit;
+import cweb.strategy.Export;
 import cweb.strategy.Login;
 import cweb.strategy.Logout;
 import cweb.strategy.Signup;
@@ -85,13 +86,13 @@ public class SingleServlet extends BaseServlet {
 			if (action.compareToIgnoreCase("checkin") == 0) {
 				strategy = new Checkin(this);
 			}
-/*
-			if (action.compareToIgnoreCase("answer") == 0) {
-				strategy = new Answer(this);
-			}
 
 			if (action.compareToIgnoreCase("export") == 0) {
 				strategy = new Export(this);
+			}
+/*
+			if (action.compareToIgnoreCase("answer") == 0) {
+				strategy = new Answer(this);
 			}
 
 			if (action.compareToIgnoreCase("questions") == 0) {

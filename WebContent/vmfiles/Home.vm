@@ -2,7 +2,6 @@
 <div class="row" style="margin-top:4em; padding:1em">
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		
-			
         #if($user)
         	#if($user.task < $max)
         		<a href="/cweb/home?action=exp">Continue</a>
@@ -20,7 +19,8 @@
                 	<input class="btn btn-primary" type="submit" value="Start Experiment">
                 </form>
     		#else
-    			<h1>Researcher page</h1>
+    			<h1>Researcher page
+				<a class="btn btn-primary pull-right" download="" href="/cweb/home?action=export"><i class="fa fa-download"></i> Download Data</a></h1>
 				<form method="post" id="form-signup" action="/cweb/home" class=" text-center">
             		<input type="hidden" name="action" value="signup"/>
 				</form>

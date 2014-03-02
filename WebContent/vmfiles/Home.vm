@@ -1,13 +1,23 @@
-
+<style>
+.modal, .modal-header, .modal-footer, .modal-dialog, .modal-content, .modal-body{
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
+}
+</style>
 <div class="row" style="margin-top:4em; padding:1em">
 	<div class="col-md-12 col-sm-12 col-xs-12">
 		
         #if($user)
-        	#if($user.task < $max)
-        		<a href="/cweb/home?action=exp">Continue</a>
-        	#else
-        		<span class="lead">Experiment completed. Thank you for your cooperation.</span><br/><br/>
-        		<div class="text-center">
+        	#if($user.task < $max)				
+				<div class="text-center">
+					<span class="lead">Your session is not over yet. Please click "Continue" button to resume.</span><br/><br/>
+					<a class="btn btn-primary" href="/cweb/home?action=choice">Continue</a>
+        			<a class="btn btn-primary" href="/cweb/home?action=logout">Logout</a>
+				</div>
+        	#else				
+				<div class="text-center">
+					<span class="lead">Experiment completed. Thank you for your cooperation.</span><br/><br/>
         			<a class="btn btn-primary" href="/cweb/home?action=logout">End</a>
         		</div>
         	#end
@@ -29,43 +39,46 @@
 						<input type="hidden" name="action" value="edit"/>
 					</form>
 				#end
-				<table class="table table-striped table-condensed">
+				<table class="table table-striped table-condensed table-bordered" style="font-size: 1em">
 					<thead>
                         <tr>
+                          <th hidden>Id</th>
                           <th>Username</th>
                           <th>CV Type</th>
                           <th>Gender</th>
                           <th></th>
                         </tr>
-                      </thead>
+                    </thead>
 				#foreach( $p in $participants )
-				<tr #if($highlightid == $p.id) class="success" #end>
-					<td><span class="field-text $p.id">$p.name</span>
-						<input type="text" class="field $p.id form-control input-sm" id="newname" name="newname" placeholder="$p.name" value="$p.name" form="form-edit-$p.id" hidden />
-                    </td>
-					<td><span class="field-text $p.id">$p.cvtype</span>
-						<select  class="field $p.id form-control input-sm" form="form-edit-$p.id" name="newcvtype" hidden>
-                          <option value="NORMAL" #if($p.cvtype == "normal") selected #end>Normal</option>
-                          <option value="PROTANOPIA"#if($p.cvtype == "protanopia") selected #end>Protanopia</option>
-                          <option value="DEUTERANOPIA"#if($p.cvtype == "deuteranopia") selected #end>Deuteranopia</option>
-                          <option value="TRITANOPIA"#if($p.cvtype == "tritanopia") selected #end>Tritanopia</option>
-                        </select>
-					</td>
-					<td><span class="field-text $p.id">$p.gender</span>
-						<select  class="field $p.id form-control input-sm" form="form-edit-$p.id" name="newgender" hidden>
-                          <option value="FEMALE" #if($p.gender == "female") selected #end>Female</option>
-                          <option value="MALE" #if($p.gender == "male") selected #end>Male</option>
-					</select>
-					</td>
-					<td style="max-width:60px; min-width:60px;">
-						<button class="btn btn-sm field-edit-button $p.id" id="$p.id"><i class="fa fa-pencil"></i> Edit</button>
-						<button form="form-edit-$p.id" type="submit" class="btn btn-sm field-edit-save-button $p.id"><i class="fa fa-floppy-o"></i> Save</button>
-						<button class="btn btn-sm field-edit-cancel-button $p.id"  id="$p.id"><i class="fa fa-floppy-o"></i> Cancel</button>
-                    </td>
-				</tr>
+    				<tr #if($highlightid == $p.id) class="success" #end>
+    					<td hidden><span class="field-text $p.id">$p.id</span>
+    						<input type="text" class="field $p.id form-control input-sm" id="id" name="id" placeholder="$p.id" value="$p.id" form="form-edit-$p.id" hidden />
+                        </td>
+    					<td><span class="field-text $p.id">$p.name</span>
+    						<input type="text" class="field $p.id form-control input-sm" id="newname" name="newname" placeholder="$p.name" value="$p.name" form="form-edit-$p.id" hidden />
+                        </td>
+    					<td><span class="field-text $p.id">$p.cvtype</span>
+    						<select  class="field $p.id form-control input-sm" form="form-edit-$p.id" name="newcvtype" hidden>
+                              <option value="NORMAL" #if($p.cvtype == "normal") selected #end>Normal</option>
+                              <option value="PROTANOPIA"#if($p.cvtype == "protanopia") selected #end>Protanopia</option>
+                              <option value="DEUTERANOPIA"#if($p.cvtype == "deuteranopia") selected #end>Deuteranopia</option>
+                              <option value="TRITANOPIA"#if($p.cvtype == "tritanopia") selected #end>Tritanopia</option>
+                            </select>
+    					</td>
+    					<td><span class="field-text $p.id">$p.gender</span>
+    						<select  class="field $p.id form-control input-sm" form="form-edit-$p.id" name="newgender" hidden>
+                              <option value="FEMALE" #if($p.gender == "female") selected #end>Female</option>
+                              <option value="MALE" #if($p.gender == "male") selected #end>Male</option>
+    					</select>
+    					</td>
+    					<td style="max-width:80px; min-width:80px;">
+    						<button class="btn btn-default btn-sm field-edit-button $p.id" id="$p.id"><i class="fa fa-pencil"></i> Edit</button>
+    						<button form="form-edit-$p.id" type="submit" class="btn btn-sm btn-default  field-edit-save-button $p.id"><i class="fa fa-floppy-o"></i> Save</button>
+    						<button class="btn btn-sm  btn-default  field-edit-cancel-button $p.id"  id="$p.id"><i class="fa fa-times"></i> Cancel</button>
+    						<button class="btn btn-default  btn-sm field-delete-button $p.id" id="$p.id"><i class="fa fa-trash-o"></i> Delete</button>
+                        </td>
+    				</tr>
 				#end
-				<tr></tr>
-				<tr></tr>
 				<tr>
 					<td><input type="text" class="form-control input-sm" id="newname" name="newname" placeholder="Enter username" form="form-signup"/></td>
 					<td><select  class="form-control input-sm" form="form-signup" name="newcvtype">
@@ -81,11 +94,28 @@
                           <option value="MALE">Male</option>
 					</select></td>
 					
-					<td><button form="form-signup" type="submit" class="btn btn-sm"><i class="fa fa-floppy-o"></i> Save</button></td>
+					<td><button form="form-signup" type="submit" class="btn btn-default btn-sm"><i class="fa fa-floppy-o"></i> Save</button></td>
 				</tr>
 				</table>
     		#end
-        #end
+		#end
+		<div id="delete-modal" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-body bg-danger" style="padding-bottom: 3em;">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">Delete Entry</h3>
+                <p class="" id="modal-text">One fine body&hellip;</p>
+				<div style="display:inline-block;" class="pull-right">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                <button type="button" id="delete-button" name="" class="btn btn-sm btn-danger"><i class="fa fa-trash-o"></i>Delete</button>
+				</div>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+	</div>
+</div>
 		<script>
     		$('.field').hide();
     		$('.field-edit-save-button').hide();
@@ -101,6 +131,16 @@
 				$('.field-edit-cancel-button.' + id).show();
 				$('.field-edit-save-button.' + id).show();
 			});
+			$('.field-delete-button').click(function(){
+				var id = $(this).attr("id");
+				$('#delete-modal').modal('show');
+				$('.modal-title').html('Delete Participant: ' + '<span class="text-danger">' + $('#newname.'+ id).val() + '</span>');
+				$('#modal-text').text('Are you sure you want to delete participant?');
+				$('#delete-button').attr('name', id);
+			});
+			$('#delete-button').click(function(){
+				window.location = '/cweb/home?action=delete&id=' + $(this).attr('name');
+			});
 			$('.field-edit-cancel-button').click(function(){
 				var id = $(this).attr("id");
 				$('.field-text.' + id).show();
@@ -113,5 +153,3 @@
 				
 			});
 		</script>
-	</div>
-</div>

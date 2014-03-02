@@ -34,6 +34,13 @@ public class UserService {
 		return emp;
 	}
 
+	public void deleteUser(User p) {
+		if (p != null) {
+			em.remove(p);
+		}
+		return;
+		
+	}
 
 	private Order getMethodOrder(int currOrder) {
 		return Order.values()[currOrder % 6];

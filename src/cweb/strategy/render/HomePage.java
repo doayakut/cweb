@@ -56,6 +56,7 @@ public class HomePage implements BaseStgy {
 		}
 
 		t.put("participants", list);
+		t.put("max", 54);
 		
 		servlet.print(t.render());
 		

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import cweb.strategy.Answer;
 import cweb.strategy.BaseStgy;
 import cweb.strategy.Checkin;
+import cweb.strategy.Delete;
 import cweb.strategy.Edit;
 import cweb.strategy.Export;
 import cweb.strategy.Login;
@@ -77,6 +78,10 @@ public class SingleServlet extends BaseServlet {
 
 			if (action.compareToIgnoreCase("edit") == 0) {
 				strategy = new Edit(this);
+			}
+
+			if (action.compareToIgnoreCase("delete") == 0) {
+				strategy = new Delete(this);
 			}
 
 			if (action.compareToIgnoreCase("choice") == 0) {

@@ -1,0 +1,92 @@
+
+<style>
+	.nav-pills > li > a {
+    	background-color: #fff;
+		-webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+		color: #666;
+    	border-left: 3px solid #fff;
+	}
+	.nav-pills > li > a:hover {
+    	background-color: #fff;
+		-webkit-border-radius: 0px;
+        -moz-border-radius: 0px;
+        border-radius: 0px;
+		color: #428bca;
+    	border-left: 3px solid #eee;
+	}
+	.nav-pills > li.active > a {
+    	background-color: #fff;
+		color: #428bca;
+    	border-left: 3px solid #428bca;
+	}
+	.nav-pills > li.active > a:hover {
+    	background-color: #fff;
+		color: #428bca;
+    	border-left: 3px solid #428bca;
+	}
+	
+</style>
+<div class="row">
+	<div class="col-md-3 col-lg-2">
+		<div data-spy="affix" data-offset-top="0" data-offset-bottom="200" class="navbar-example" style="padding:30px">
+			<ul class="nav nav-pills nav-stacked">
+			#foreach($t in $tables)
+            	<li><a href="#table$velocityCount" data-toggle="pill"><span class="lead">$t.name</span></a></li>
+            
+			#end
+			</ul>
+            
+		</div>
+	</div>
+	<div data-spy="scroll" data-target=".navbar-example" class="col-md-8 col-lg-9">
+		<div class="tab-content">
+			#foreach($t in $tables)
+				<div class="tab-pane"  id="table$velocityCount">
+                    <h3>$t.name</h3>
+					<table class="table demo" style="font-size: 0.9em">
+                      <thead class="header">
+                        <tr>
+						#foreach($a in $t.attributes)
+							<th>$a.getName() </th> 
+						#end
+                        </tr>
+                      </thead>
+                      <tbody>
+							
+    					#foreach($i in $t.items)
+                        <tr>
+    						#foreach($a in $t.attributes)
+                                <td>$i.getAttributeStr($a.getName()) </td> 
+    						#end
+						</tr>
+    					#end
+                      </tbody>
+                    </table>
+					
+					<br/>
+					
+					
+				</div>
+			#end
+		</div>
+	</div>
+</div>
+
+<script>
+	#set($d = '$')
+	${d}('li>a[href="table1"]').addClass('active');
+	${d}('div#table1').addClass('active');
+	${d}('.demo').dataTable( {
+        "bSort": true, "aaSorting": [[ 4, "desc" ]],"sPaginationType": "full_numbers"
+    } );
+	${d}('.paginate_disabled_previous').html('<i class="fa fa-angle-double-left"></i> Previous ');
+	${d}('.paginate_enabled_previous').html('<i class="fa fa-angle-double-left"></i> Previous ');
+	${d}('.paginate_disabled_next').html(' Next <i class="fa fa-angle-double-right"></i>');
+	${d}('.paginate_enabled_next').html(' Next <i class="fa fa-angle-double-right"></i> '); 
+	
+	${d}('.dataTables_length').find('select').eq(0).addClass('form-control');
+	${d}('.dataTables_filter').find('input').eq(0).addClass('form-control').addClass('input-sm');
+
+</script>

@@ -12,6 +12,6 @@ public interface BaseStgy {
 	public BaseServlet root = null; 
 
 	public boolean authenticate();
-	public void execute() throws IOException;
+	public void execute() throws IOException, IllegalArgumentException, IllegalAccessException;
 	
 }

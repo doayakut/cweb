@@ -19,6 +19,7 @@ import cweb.strategy.render.Choice;
 import cweb.strategy.render.EvalPage;
 import cweb.strategy.render.ExpPage;
 import cweb.strategy.render.HomePage;
+import cweb.strategy.render.RenderData;
 
 @SuppressWarnings("serial")
 public class SingleServlet extends BaseServlet {
@@ -95,16 +96,11 @@ public class SingleServlet extends BaseServlet {
 			if (action.compareToIgnoreCase("export") == 0) {
 				strategy = new Export(this);
 			}
-/*
-			if (action.compareToIgnoreCase("answer") == 0) {
-				strategy = new Answer(this);
+			
+			if (action.compareToIgnoreCase("render") == 0) {
+				strategy = new RenderData(this);
 			}
-
-			if (action.compareToIgnoreCase("questions") == 0) {
-				strategy = new QuestionsPage(this);
-			}
-
-			*/
+			
 			if (strategy != null) {
 				if (!strategy.authenticate()) {
 					this.redirect("/home");

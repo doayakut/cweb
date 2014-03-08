@@ -1,5 +1,7 @@
 package cweb.jpa;
 
+import java.lang.reflect.Field;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,23 +19,23 @@ import cweb.jpa.enums.Question;
 @Entity
 @Table(name = "answers")
 public class Answer {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "answer_id")
+	@Column(name = "answer_id")
 	private long id;
-	
+
 	@Enumerated(EnumType.STRING)
-    @Column(name = "question")
+	@Column(name = "question")
 	private Question question;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User user;
-	
+
 	private Float value;
 
-    @Column(name = "view_index")
+	@Column(name = "view_index")
 	private int viewIndex;
 
 	public long getId() {
@@ -51,7 +53,6 @@ public class Answer {
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
-
 
 	public Float getValue() {
 		return value;
@@ -76,8 +77,26 @@ public class Answer {
 	public void setViewIndex(int viewIndex) {
 		this.viewIndex = viewIndex;
 	}
-	
 
+	public String getAttributeStr(String a) {
+		try {
+			// string field
+			Field f = Answer.class.getDeclaredField(a);
+			Object val = f.get(this);
+			if (val != null)
+				return val.toString();
+			else {
+				if(f.getAnnotation(JoinColumn.class) == null){
+					
+				}
+				else 
+					return "";
 
-	
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return "";
+	}
+
 }

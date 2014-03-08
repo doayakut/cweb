@@ -1,5 +1,6 @@
 package cweb.jpa;
 
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.Hashtable;
 
@@ -11,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 import cweb.jpa.enums.Order;
@@ -25,7 +27,7 @@ public class User implements Comparable<User> {
 
 	private String name;
 
-	@Basic(fetch=FetchType.EAGER)
+	@Basic(fetch = FetchType.EAGER)
 	private int curr;
 
 	public enum State {
@@ -34,21 +36,19 @@ public class User implements Comparable<User> {
 
 	private State state;
 
-
 	@Enumerated(EnumType.STRING)
-    @Column(name = "method_order")
+	@Column(name = "method_order")
 	private Order methodOrder;
 
 	@Enumerated(EnumType.STRING)
-    @Column(name = "page_order")
+	@Column(name = "page_order")
 	private Order pageOrder;
 
-    @Column(name = "date_created")
+	@Column(name = "date_created")
 	private Date createDate;
-	
 
 	private String gender;
-	
+
 	private String cvtype;
 
 	public long getId() {
@@ -127,7 +127,7 @@ public class User implements Comparable<User> {
 	public int compareTo(User o) {
 		return 0;
 	}
-	
+
 	public static Hashtable<String, Object> getHashtable(User uoi) {
 		Hashtable<String, Object> ht;
 
@@ -136,10 +136,7 @@ public class User implements Comparable<User> {
 		}
 		System.out.println("not null");
 		ht = new Hashtable<String, Object>();
-		
-		if(ht == null){
-			return null;
-		}
+
 		System.out.println(ht);
 		ht.put("id", uoi.getId());
 		ht.put("cvtype", uoi.getCvtype());
@@ -152,15 +149,48 @@ public class User implements Comparable<User> {
 	}
 
 	public boolean isCompleted() {
-		if(curr <= 54)
+		if (curr <= 54)
 			return false;
-		else return true;
+		else
+			return true;
 	}
 
 	public boolean isDonePages() {
-		if(curr >= 54)
+		if (curr >= 54)
 			return true;
-		else return false;
+		else
+			return false;
+	}
+
+	public String getAttributeStr(String a) {
+		try {
+			// string field
+			Field f = User.class.getDeclaredField(a);
+			Object val = f.get(this);
+			if (val != null)
+				return val.toString();
+			else {
+				final JoinColumn joinAnnotation = f
+						.getAnnotation(JoinColumn.class);
+				if (null != joinAnnotation) {
+					return (!joinAnnotation.nullable()) ? "true" : "false";
+				}
+
+				final Column columnAnnotation = f.getAnnotation(Column.class);
+				if (null != columnAnnotation) {
+					return (!columnAnnotation.nullable()) ? "true" : "false";
+				}
+
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return "";
+	}
+	
+	public String toString(){
+		return id + "-" + name;
+		
 	}
 
 }

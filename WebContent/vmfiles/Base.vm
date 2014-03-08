@@ -20,12 +20,14 @@
         <link href="/cweb/offline/css/bootstrap.min.css" rel="stylesheet"> 
         <link href="/cweb/offline/css/font-awesome.min.css" rel="stylesheet">
 		<link href="/cweb/offline/css/slider.css" rel="stylesheet" />
+		<link href="/cweb/offline/css/jquery.dataTables.css" rel="stylesheet" />
 		
         <script src="/cweb/offline/js/jquery-2.0.3.min.js"></script>
         <script src="/cweb/offline/js/bootstrap.min.js"></script>
 		<script src="/cweb/offline/js/modernizr.js"></script>	
 		<script src="/cweb/offline/js/tempscript.js"></script>
 		<script src="/cweb/offline/js/bootstrap-slider1.js"></script>
+		<script src="/cweb/offline/js/jquery.dataTables.min.js"></script>
    
     </head>
     <body style="padding:0;">

@@ -1,9 +1,7 @@
 package cweb.strategy;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 import cweb.BaseServlet;
@@ -51,6 +49,7 @@ public class Answer implements BaseStgy{
 				    a.setQuestion(Question.getFromId(key));
 				    a.setValue(Float.parseFloat(values[0]));
 				    a.setUser(u);
+				    a.setViewIndex(u.getCurr() + 1);
 			    }
 			}
 			

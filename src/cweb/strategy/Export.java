@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +62,7 @@ public class Export implements BaseStgy {
 				.findAllUsers());
 
 		Collections.sort(users);
+		int row_count = 0;
 		for (int i = 0; i < users.size(); i++) {
 
 			User u = users.get(i);
@@ -70,7 +70,8 @@ public class Export implements BaseStgy {
 			if (!u.getName().startsWith("test")) {
 
 				System.out.println("Writing: " + u.getName());
-				addToSheets(u, i + 3);
+				addToSheets(u, row_count + 3);
+				row_count++;
 			}
 
 		}
@@ -307,6 +308,7 @@ public class Export implements BaseStgy {
 		return cell;
 	}
 
+	@SuppressWarnings("unused")
 	private Cell createCell(Row r, int index, String valueStr, String commentStr) {
 		Cell cell = createCell(r, index, valueStr, true);
 
@@ -363,6 +365,7 @@ public class Export implements BaseStgy {
 		return createCell(r, index, valueF, commentStr, false);
 	}
 
+	@SuppressWarnings("unused")
 	private float roundFloat(float undone) {
 		BigDecimal bd = new BigDecimal(undone);
 		BigDecimal rounded = bd.setScale(3, BigDecimal.ROUND_HALF_UP);

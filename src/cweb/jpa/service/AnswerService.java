@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 import cweb.jpa.Answer;
-import cweb.jpa.User;
 
 public class AnswerService {
 	protected EntityManager em;

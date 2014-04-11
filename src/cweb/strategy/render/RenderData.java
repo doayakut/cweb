@@ -1,22 +1,16 @@
 package cweb.strategy.render;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.metamodel.EntityType;
 
 import org.apache.velocity.tools.generic.ValueParser;
-
-import com.sun.xml.internal.stream.Entity;
 
 import cweb.BaseServlet;
 import cweb.jpa.User;

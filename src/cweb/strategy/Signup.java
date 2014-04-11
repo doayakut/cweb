@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
-import javax.servlet.http.HttpSession;
 
-import cweb.BaseServlet.MessageType;
-import cweb.jpa.service.UserService;
 import cweb.BaseServlet;
+import cweb.BaseServlet.MessageType;
 import cweb.jpa.User;
+import cweb.jpa.service.UserService;
 
 public class Signup implements BaseStgy {
 	public static ArrayList<Class<? extends User>> auths;

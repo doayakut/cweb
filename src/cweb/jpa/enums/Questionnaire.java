@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 
-import cweb.jpa.enums.Question;
-
 public enum Questionnaire {
 	Questionnaire1("ACTIVITY", Question.Question1, Question.Question2, Question.Question3, Question.Question4 ), 
 	Questionnaire2("WEIGHT", Question.Question5, Question.Question6, Question.Question7), 

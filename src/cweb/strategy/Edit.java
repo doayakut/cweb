@@ -53,6 +53,7 @@ public class Edit implements BaseStgy {
 		
 	}
 
+	@SuppressWarnings("unused")
 	private User getUserFromDB(String name) {
 		
 		

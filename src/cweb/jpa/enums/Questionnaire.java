@@ -26,6 +26,10 @@ public enum Questionnaire {
 		}
 	}
 	
+	public List<Question> getQuestionList(){
+		return questionList;
+	}
+	
 	public Hashtable<String, Object> getHashtable(){
 		Hashtable<String, Object> ht = new Hashtable<String, Object>();
 		List<Hashtable<String, Object>> list = new ArrayList<Hashtable<String, Object>>();

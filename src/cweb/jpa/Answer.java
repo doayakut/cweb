@@ -1,6 +1,7 @@
 package cweb.jpa;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Query;
 import javax.persistence.Table;
 
 import cweb.jpa.enums.Question;
@@ -77,6 +79,7 @@ public class Answer {
 	public void setViewIndex(int viewIndex) {
 		this.viewIndex = viewIndex;
 	}
+
 
 	public String getAttributeStr(String a) {
 		try {

@@ -151,14 +151,15 @@ public class BaseServlet extends HttpServlet {
 	}
 	public void close() {
 		try {
-			
-			
+			System.out.println("Closing");
+			System.out.println(this.userTransaction.getStatus());
 			
 			if(this.userTransaction.getStatus() != Status.STATUS_NO_TRANSACTION)
 				this.userTransaction.commit();
+
+			System.out.println("Strategy Done");
 		} catch (Exception e) {
-			e.printStackTrace();
-			sendQuery();
+			
 			System.out.println("Could not Closed");
 
 		}

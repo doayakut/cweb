@@ -107,7 +107,7 @@ public class SingleServlet extends BaseServlet {
 					this.close();
 					return;
 				}
-
+				System.out.println("Executing strategy");
 				strategy.execute();
 				this.close();
 				return;

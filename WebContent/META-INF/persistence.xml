@@ -7,6 +7,8 @@
     
     <class>cweb.jpa.User</class>
     <properties>
+    <property name="openjpa.Log" value="Enhance=TRACE, MetaData=TRACE"/>
+    <property name="openjpa.RuntimeUnenhancedClasses" value="unsupported"/>
 	<property name="openjpa.jdbc.SchemaFactory" value="native(ForeignKeys=true)" />
      <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>
     </properties>

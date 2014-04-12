@@ -20,7 +20,10 @@ public enum Order {
 		order.add(type2);
 	}
 	
-	public int get(int index){
+	public List<Integer> getOrder(){
+		return order;
+	}
+	public int get(int  index){
 		return order.get(index);
 	}
 	public static final int size = Order.values().length;

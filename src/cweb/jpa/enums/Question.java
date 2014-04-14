@@ -38,6 +38,16 @@ public enum Question {
 	String minLabel;
 	String maxLabel;
 	
+	public String getMinLabel(){
+		return minLabel;
+	}
+	public String getMaxLabel(){
+		return maxLabel;
+	}
+	public String getText(){
+		return text;
+	}
+	
 	private Question(String id, String text, String minLabel, String maxLabel) {
 		this.id = id;
 		this.text = text;

@@ -73,7 +73,7 @@ public class Export implements BaseStgy {
 				.findAllUsers());
 
 		Collections.sort(users);
-		int row_count = 1;
+		int row_count = 4;
 		for (int i = 0, offset = 0; i < users.size(); i++, offset = 0) {
 
 			User u = users.get(i);
@@ -124,6 +124,70 @@ public class Export implements BaseStgy {
 		dataFormat = wb.createDataFormat();
 		style_numeric.setDataFormat(dataFormat.getFormat("0.00"));
 		
+		Row row0, row2, row1, row3;
+
+		row0 = sheet.createRow(0);
+		row1 = sheet.createRow(1);
+		row2 = sheet.createRow(2);
+		row3 = sheet.createRow(3);
+		
+		int width = Method.length * PageType.length;
+		int q_offset = 0;
+		int q_offset_2 = 0;
+		int offset = 5;
+		for (Questionnaire qn: Questionnaire.list){
+
+			String qn_str = qn.getLabel();
+
+			
+			
+			if(qn != Questionnaire.Questionnaire6){ // Every question will have 9 separate average value depending on the answer
+				int qn_beginning = offset + q_offset * (width + 1);
+				Cell cell = createBoldCell(row0, qn_beginning);
+				cell.setCellValue(qn.getLabel());
+				sheet.addMergedRegion(new CellRangeAddress(0, 0, qn_beginning, qn_beginning + qn.getQuestionList().size() * (width + 1) - 2));
+
+
+				for(Question q: qn.getQuestionList()){
+					
+					int q_beginning = offset + q_offset * (width + 1);
+					
+					Cell cell_q = createBoldCell(row1, q_beginning);
+					cell_q.setCellValue(q.getText() + "\n" + q.getMinLabel() + " - " + q.getMaxLabel() + "\n" + q.toString());
+					sheet.addMergedRegion(new CellRangeAddress(1, 1, q_beginning, q_beginning + width - 1));
+					
+					for(Method m: Method.list){
+						
+						int m_beginning = q_beginning + PageType.length * m.ordinal();
+						
+						Cell cell_m = createBoldCell(row2, m_beginning);
+						cell_m.setCellValue(m.toString());
+						sheet.addMergedRegion(new CellRangeAddress(2, 2, m_beginning, m_beginning + Method.length - 1));
+
+						for(PageType pt: PageType.list){
+							Cell cell_pt = createBoldCell(row3, m_beginning + pt.ordinal());
+							cell_pt.setCellValue(pt.toString());
+						}
+					}
+					q_offset++;
+				}
+			}
+			else {
+				int qn_beginning = offset + q_offset * (width + 1);
+				Cell cell = createBoldCell(row0, qn_beginning);
+				cell.setCellValue(qn.getLabel());
+
+				for(Question q: qn.getQuestionList()){
+					int q_beginning = offset + q_offset * (width + 1) + q_offset_2 * 2;
+					Cell cell_q = createBoldCell(row1, q_beginning);
+					cell_q.setCellValue(q.getText() + "\n" + q.getMinLabel() + " - " + q.getMaxLabel() + "\n" + q.toString());
+
+					q_offset_2++;
+					
+				}
+			}
+		}
+		
 	}
 
 	private int writeName(Row r, User u, int offset) {
@@ -164,10 +228,10 @@ public class Export implements BaseStgy {
 	private int writeAnswers(Row r, User u, int offset){
 		int width = Method.length * PageType.length;
 		int q_offset = 0;
+		int q_offset_2 = 0;
 		for (Questionnaire qn: Questionnaire.list){
 			if(qn != Questionnaire.Questionnaire6){ // Every question will have 9 separate average value depending on the answer
 				for(Question q: qn.getQuestionList()){
-					System.out.println(q.name());
 					// Calculate index by Method.ordinal * PageType.length + PageType.ordinal
 					float[] totals = new float[width];
 					int[] counts = new int[width];
@@ -185,7 +249,7 @@ public class Export implements BaseStgy {
 					}
 					for (int j = 0; j < width; j++) {
 						if (counts[j] != 0) {
-							Cell cell = r.createCell(offset + q_offset * 9 + j);
+							Cell cell = r.createCell(offset + q_offset * 10 + j);
 							cell.setCellValue(totals[j] / counts[j]);
 							cell.setCellStyle(style_numeric);
 						}
@@ -195,6 +259,17 @@ public class Export implements BaseStgy {
 			}
 			else{ // Last questionnaire is independent on webpage coloring
 				
+				for(Question q: qn.getQuestionList()){
+					// Calculate index by Method.ordinal * PageType.length + PageType.ordinal
+					
+					List<Answer> answers = as.getAnswers(u,q);
+					Answer a = answers.get(0);
+					
+					Cell cell = r.createCell(offset + q_offset * 10 + q_offset_2 * 2);
+					cell.setCellValue(a.getValue());
+					cell.setCellStyle(style_numeric);
+					q_offset_2++;
+				}
 			}
 		}
 		return offset;

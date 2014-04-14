@@ -30,6 +30,10 @@ public enum Questionnaire {
 		return questionList;
 	}
 	
+	public String getLabel(){
+		return label;
+	}
+	
 	public Hashtable<String, Object> getHashtable(){
 		Hashtable<String, Object> ht = new Hashtable<String, Object>();
 		List<Hashtable<String, Object>> list = new ArrayList<Hashtable<String, Object>>();

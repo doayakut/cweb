@@ -26,10 +26,18 @@ public class HomePage implements BaseStgy {
 	@Override
 	public void execute() throws IOException {
 		Template t = new Template("vmfiles/Home.vm", servlet);
+		
+		User user = (User)servlet.getUser();
 
+		if(user != null && user.isCVD())
+			t.put("max", 54);
+		else
+			t.put("max", 18);
+		
 		/* fetching person hashtables */
-		Hashtable<String, Object> ht_u = User.getHashtable((User)servlet.getUser());
+		Hashtable<String, Object> ht_u = User.getHashtable(user);
 
+		
 		t.put("user", ht_u);
 		t.put("usertype", servlet.getRequest().getParameter("type"));
 		
@@ -54,8 +62,6 @@ public class HomePage implements BaseStgy {
 		}
 
 		t.put("participants", list);
-		t.put("max", 54);
-		
 		servlet.print(t.render());
 		
 	}

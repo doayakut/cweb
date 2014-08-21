@@ -57,21 +57,38 @@ public class ExpPage implements BaseStgy {
 		else {
 		
 			String cvtype = u.getCvtype();
-			String folderpath = "";
-	
-			int pageindex = servlet.getUserservice().getCurrPageIndex(u);
-			Method m = servlet.getUserservice().getCurrMethod(u);
-			PageType pt = servlet.getUserservice().getCurrPageType(u);
-	
-			folderpath = "/" + cvtype + "/" + m.name().toLowerCase() + "/"
-					+ pt.name().toLowerCase() + "/" + (pageindex + 1);
-	
-			t = new Template("vmfiles/ExpPage.vm", servlet);
-			Hashtable<String, Object> ht = new Hashtable<String, Object>();
-			ht.put("html", folderpath + ".html");
-			ht.put("css", folderpath + ".css");
-			t.put("url", ht);
-	
+			if(!cvtype.equalsIgnoreCase(Method.NORMAL.toString())){
+				String folderpath = "";
+		
+				int pageindex = servlet.getUserservice().getCurrPageIndex(u);
+				Method m = servlet.getUserservice().getCurrMethod(u);
+				PageType pt = servlet.getUserservice().getCurrPageType(u);
+		
+				folderpath = "/" + cvtype + "/" + m.name().toLowerCase() + "/"
+						+ pt.name().toLowerCase() + "/" + (pageindex + 1);
+		
+				t = new Template("vmfiles/ExpPage.vm", servlet);
+				Hashtable<String, Object> ht = new Hashtable<String, Object>();
+				ht.put("html", folderpath + ".html");
+				ht.put("css", folderpath + ".css");
+				t.put("url", ht);
+			}
+			else {
+				String folderpath = "";
+				
+				int pageindex = servlet.getUserservice().getCurrPageIndex(u);
+				PageType pt = servlet.getUserservice().getCurrPageType(u);
+		
+				folderpath = "/" + cvtype + "/" 
+						+ pt.name().toLowerCase() + "/" + (pageindex + 1);
+
+				t = new Template("vmfiles/ExpPage.vm", servlet);
+				Hashtable<String, Object> ht = new Hashtable<String, Object>();
+				ht.put("html", folderpath + ".html");
+				ht.put("css", folderpath + ".css");
+				t.put("url", ht);
+		
+			}
 			Hashtable<String, Object> ht_u = User.getHashtable(u);
 			t.put("user", ht_u);
 			servlet.print(t.render());

@@ -110,25 +110,46 @@ public class UserService {
 	}
 
 
+	// FOR CVD
 	// Order for viewing pages changes how to get page index, type and method
 	// Current order is : PageType(3) → Index(6) → Method(3)
 	// Method is N % 3 
 	// Index is (N / 3) % 6
 	// Type is (N / 18) % 3
+	
+	// FOR NORMAL
+	// Order for viewing pages changes how to get page index, type and method
+	// Current order is : PageType(3) → Index(6)
+	// Index is N % 6
+	// Type is (N / 6) % 3
 	public int getPageIndex(User u, int i) {
-		return (i / 3) % 6;
+		if(u.isCVD())
+			return (i / 3) % 6;
+		else
+			return i % 6;
 		
 	}
 
 	public PageType getPageType(User u, int i) {
-		int pagetype = (i / 18) % 6;
-		return PageType.list.get(u.getPageOrder().get(pagetype));
+		if(u.isCVD()){
+			int pagetype = (i / 18) % 6;
+			return PageType.list.get(u.getPageOrder().get(pagetype));
+		}
+		else {
+			int pagetype = (i / 6) % 3;
+			return PageType.list.get(u.getPageOrder().get(pagetype));
+		}
 		
 	}
 
 	public Method getMethod(User u, int i) {
-		int method = i % 3;
-		return Method.list.get(u.getMethodOrder().get(method));
+		if(u.isCVD()){
+			int method = i % 3;
+			Method m = Method.list.get(u.getMethodOrder().get(method));
+			return m;
+		}
+		else 
+			return null;
 	}
 
 	public int getCurrPageIndex(User u) {

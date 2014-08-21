@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import cweb.jpa.enums.Method;
 import cweb.jpa.enums.Order;
 
 @Entity
@@ -149,19 +150,26 @@ public class User implements Comparable<User> {
 	}
 
 	public boolean isCompleted() {
-		if (curr <= 54)
+		if (isCVD() && curr <= 54)
+			return false;
+		else if(!isCVD() && curr <= 18)
 			return false;
 		else
 			return true;
 	}
 
 	public boolean isDonePages() {
-		if (curr >= 54)
+		if (isCVD() && curr >= 54)
+			return true;
+		else if(!isCVD() && curr >= 18)
 			return true;
 		else
 			return false;
 	}
 
+	public boolean isCVD(){
+		return ! cvtype.equalsIgnoreCase(Method.NORMAL.toString());
+	}
 	public String getAttributeStr(String a) {
 		try {
 			// string field

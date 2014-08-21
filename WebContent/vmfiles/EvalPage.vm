@@ -26,14 +26,23 @@
                 <input type="hidden" name="action" value="answer"/>
 				#if($user.state == "TRAINING")
 					#set($pagenum = $user.task + 1)
-				<h2>Training Page : Version $pagenum</h2>
+				<h2>Training Page $pagenum</h2>
 				#else
-					#if($user.task == 54)
-						<h2>Questionnaire</h2>
-					#else
-                        #set( $pagenum = $user.task / 3 + 1)
-                        #set( $vernum = $user.task % 3 + 1) 
-    					<h2>Page # $pagenum : Version $vernum</h2>
+					#if($user.cvtype == "normal")
+						#if($user.task == 18)
+    						<h2>Questionnaire</h2>
+    					#else
+                            #set( $pagenum = $user.task + 1)
+    						<h2>Page # $pagenum</h2>
+						#end
+					#else	
+						#if($user.task == 54)
+    						<h2>Questionnaire</h2>
+    					#else
+                            #set( $pagenum = $user.task / 3 + 1)
+                            #set( $vernum = $user.task % 3 + 1)
+    						<h2>Page # $pagenum : Version $vernum</h2>
+						#end
 					#end
 				#end
 				<!--<ul class="pager">

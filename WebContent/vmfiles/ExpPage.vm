@@ -13,9 +13,14 @@
 					#set($pagenum = $user.task + 1)
 				<span style="font-family: Arial; font-size: 1.2em; ">Training Page : Version $pagenum</span>
 				#else
-                    #set( $pagenum = $user.task / 3 + 1)
-                    #set( $vernum = $user.task % 3 + 1) 
-				<span style="font-family: Arial; font-size: 1.2em; ">Page # $pagenum : Version $vernum</span>
+					#if($user.cvtype == "normal")
+                        #set( $pagenum = $user.task + 1)
+						<span style="font-family: Arial; font-size: 1.2em; ">Page # $pagenum</span>
+					#else	
+                        #set( $pagenum = $user.task / 3 + 1)
+                        #set( $vernum = $user.task % 3 + 1)
+						<span style="font-family: Arial; font-size: 1.2em; ">Page # $pagenum : Version $vernum</span>
+					#end
 				#end
 				<a href="/cweb/home?action=exp" style="float:right" id="mybutton">Next</a>
         </div>

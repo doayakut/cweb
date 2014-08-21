@@ -45,14 +45,15 @@ public class Export implements BaseStgy {
 	public BaseServlet servlet;
 
 	private Workbook wb;
-	private Sheet sheet;
+	private Sheet sheetCVD;
+	private Sheet sheetNormal;
 
 	private CellStyle style_header;
 	private CellStyle style_numeric;
 	private CellStyle style_gray;
 	private Font f_bold;
 	private DataFormat dataFormat;
-	
+
 	private AnswerService as;
 
 	public Export(BaseServlet s) {
@@ -73,7 +74,6 @@ public class Export implements BaseStgy {
 				.findAllUsers());
 
 		Collections.sort(users);
-		int row_count = 4;
 		for (int i = 0, offset = 0; i < users.size(); i++, offset = 0) {
 
 			User u = users.get(i);
@@ -81,18 +81,17 @@ public class Export implements BaseStgy {
 			if (!u.getName().startsWith("test")) {
 
 				System.out.print("Writing: " + u.getName());
-				Row r = sheet.createRow(row_count);
-				
-				row_count++;
-				
+				Row r = createRow(u);
+
 				offset = writeName(r, u, offset) + 1;
 				offset = writeOrder(r, u, offset) + 1;
+
 				offset = writeAnswers(r, u, offset) + 1;
 				System.out.println(" done");
 			}
 			u = null;
 		}
-		
+
 		servlet.getResponse().setContentType("text/plain");
 		servlet.getResponse().setHeader("Content-Disposition",
 				"attachment; filename=data-" + getDate() + ".xls");
@@ -100,10 +99,151 @@ public class Export implements BaseStgy {
 
 	}
 
+	private void prepCVDSheet() {
+		// Sheet for cvd
+		Row row0, row2, row1, row3;
+
+		row0 = sheetCVD.createRow(0);
+		row1 = sheetCVD.createRow(1);
+		row2 = sheetCVD.createRow(2);
+		row3 = sheetCVD.createRow(3);
+
+		int width = (Method.length - 1) * PageType.length;
+		int q_offset = 0;
+		int q_offset_2 = 0;
+		int offset = 5;
+		for (Questionnaire qn : Questionnaire.list) {
+
+			String qn_str = qn.getLabel();
+
+			// Every question will have 9 separate average value depending on
+			// the answer
+			if (qn != Questionnaire.Questionnaire6) {
+				int qn_beginning = offset + q_offset * (width + 1);
+				Cell cell = createBoldCell(row0, qn_beginning);
+				cell.setCellValue(qn.getLabel());
+				sheetCVD.addMergedRegion(new CellRangeAddress(0, 0,
+						qn_beginning, qn_beginning
+								+ qn.getQuestionList().size() * (width + 1) - 2));
+
+				for (Question q : qn.getQuestionList()) {
+
+					int q_beginning = offset + q_offset * (width + 1);
+
+					Cell cell_q = createBoldCell(row1, q_beginning);
+					cell_q.setCellValue(q.getText() + "\n Min: " + q.getMinLabel()
+							+ "\n Max:" + q.getMaxLabel() + "\n");
+					sheetCVD.addMergedRegion(new CellRangeAddress(1, 1,
+							q_beginning, q_beginning + width - 1));
+
+					for (Method m : Method.list) {
+						if (m.equals(Method.NORMAL))
+							continue;
+						int m_beginning = q_beginning + PageType.length
+								* m.ordinal();
+
+						Cell cell_m = createBoldCell(row2, m_beginning);
+						cell_m.setCellValue(m.toString());
+						sheetCVD.addMergedRegion(new CellRangeAddress(2, 2,
+								m_beginning, m_beginning + Method.length - 2));
+
+						for (PageType pt : PageType.list) {
+							Cell cell_pt = createBoldCell(row3, m_beginning
+									+ pt.ordinal());
+							cell_pt.setCellValue(pt.toString());
+						}
+					}
+					q_offset++;
+				}
+			} else {
+				int qn_beginning = offset + q_offset * (width + 1);
+				Cell cell = createBoldCell(row0, qn_beginning);
+				cell.setCellValue(qn.getLabel());
+
+				for (Question q : qn.getQuestionList()) {
+					int q_beginning = offset + q_offset * (width + 1)
+							+ q_offset_2 * 2;
+					Cell cell_q = createBoldCell(row1, q_beginning);
+					cell_q.setCellValue(q.getText() + "\n Min: " + q.getMinLabel()
+							+ "\n Max:" + q.getMaxLabel() + "\n");
+
+					q_offset_2++;
+
+				}
+			}
+		}
+
+	}
+
+	private void prepNormalSheet() {
+		// Sheet for cvd
+		Row row0, row2, row1;
+
+		row0 = sheetNormal.createRow(0);
+		row1 = sheetNormal.createRow(1);
+		row2 = sheetNormal.createRow(2);
+
+		int width = PageType.length;
+		int q_offset = 0;
+		int q_offset_2 = 0;
+		int offset = 5;
+
+		for (Questionnaire qn : Questionnaire.list) {
+
+			String qn_str = qn.getLabel();
+
+			// Every question will have 3 separate average value depending on
+			// the answer
+			if (qn != Questionnaire.Questionnaire6) {
+				int qn_beginning = offset + q_offset * (width + 1);
+				Cell cell = createBoldCell(row0, qn_beginning);
+				cell.setCellValue(qn.getLabel());
+				sheetNormal.addMergedRegion(new CellRangeAddress(0, 0,
+						qn_beginning, qn_beginning
+								+ qn.getQuestionList().size() * (width + 1) - 2));
+
+				for (Question q : qn.getQuestionList()) {
+
+					int q_beginning = offset + q_offset * (width + 1);
+
+					Cell cell_q = createBoldCell(row1, q_beginning);
+					cell_q.setCellValue(q.getText() + "\n Min: " + q.getMinLabel()
+							+ "\n Max:" + q.getMaxLabel() + "\n");
+					sheetNormal.addMergedRegion(new CellRangeAddress(1, 1,
+							q_beginning, q_beginning + width - 1));
+
+					for (PageType pt : PageType.list) {
+						Cell cell_pt = createBoldCell(row2, q_beginning
+								+ pt.ordinal());
+						cell_pt.setCellValue(pt.toString());
+					}
+				
+					q_offset++;
+				}
+			} else {
+				int qn_beginning = offset + q_offset * (width + 1);
+				Cell cell = createBoldCell(row0, qn_beginning);
+				cell.setCellValue(qn.getLabel());
+
+				for (Question q : qn.getQuestionList()) {
+					int q_beginning = offset + q_offset * (width + 1)
+							+ q_offset_2 * 2;
+					Cell cell_q = createBoldCell(row1, q_beginning);
+					cell_q.setCellValue(q.getText() + "\n Min: " + q.getMinLabel()
+							+ "\n Max:" + q.getMaxLabel() + "\n");
+
+					q_offset_2++;
+
+				}
+			}
+		}
+	}
+
 	private void prepSheets() {
 
 		wb = new HSSFWorkbook();
-		sheet = wb.createSheet();
+		sheetCVD = wb.createSheet();
+		sheetNormal = wb.createSheet();
 
 		HSSFPalette palette = ((HSSFWorkbook) wb).getCustomPalette();
 		palette.setColorAtIndex(HSSFColor.GREY_25_PERCENT.index, (byte) 230,
@@ -123,71 +263,18 @@ public class Export implements BaseStgy {
 		style_numeric = wb.createCellStyle();
 		dataFormat = wb.createDataFormat();
 		style_numeric.setDataFormat(dataFormat.getFormat("0.00"));
-		
-		Row row0, row2, row1, row3;
 
-		row0 = sheet.createRow(0);
-		row1 = sheet.createRow(1);
-		row2 = sheet.createRow(2);
-		row3 = sheet.createRow(3);
-		
-		int width = Method.length * PageType.length;
-		int q_offset = 0;
-		int q_offset_2 = 0;
-		int offset = 5;
-		for (Questionnaire qn: Questionnaire.list){
+		prepCVDSheet();
+		prepNormalSheet();
 
-			String qn_str = qn.getLabel();
+	}
 
-			
-			
-			if(qn != Questionnaire.Questionnaire6){ // Every question will have 9 separate average value depending on the answer
-				int qn_beginning = offset + q_offset * (width + 1);
-				Cell cell = createBoldCell(row0, qn_beginning);
-				cell.setCellValue(qn.getLabel());
-				sheet.addMergedRegion(new CellRangeAddress(0, 0, qn_beginning, qn_beginning + qn.getQuestionList().size() * (width + 1) - 2));
+	private Row createRow(User u) {
+		if (u.isCVD())
+			return sheetCVD.createRow(sheetCVD.getLastRowNum() + 1);
+		else
+			return sheetNormal.createRow(sheetNormal.getLastRowNum() + 1);
 
-
-				for(Question q: qn.getQuestionList()){
-					
-					int q_beginning = offset + q_offset * (width + 1);
-					
-					Cell cell_q = createBoldCell(row1, q_beginning);
-					cell_q.setCellValue(q.getText() + "\n" + q.getMinLabel() + " - " + q.getMaxLabel() + "\n" + q.toString());
-					sheet.addMergedRegion(new CellRangeAddress(1, 1, q_beginning, q_beginning + width - 1));
-					
-					for(Method m: Method.list){
-						
-						int m_beginning = q_beginning + PageType.length * m.ordinal();
-						
-						Cell cell_m = createBoldCell(row2, m_beginning);
-						cell_m.setCellValue(m.toString());
-						sheet.addMergedRegion(new CellRangeAddress(2, 2, m_beginning, m_beginning + Method.length - 1));
-
-						for(PageType pt: PageType.list){
-							Cell cell_pt = createBoldCell(row3, m_beginning + pt.ordinal());
-							cell_pt.setCellValue(pt.toString());
-						}
-					}
-					q_offset++;
-				}
-			}
-			else {
-				int qn_beginning = offset + q_offset * (width + 1);
-				Cell cell = createBoldCell(row0, qn_beginning);
-				cell.setCellValue(qn.getLabel());
-
-				for(Question q: qn.getQuestionList()){
-					int q_beginning = offset + q_offset * (width + 1) + q_offset_2 * 2;
-					Cell cell_q = createBoldCell(row1, q_beginning);
-					cell_q.setCellValue(q.getText() + "\n" + q.getMinLabel() + " - " + q.getMaxLabel() + "\n" + q.toString());
-
-					q_offset_2++;
-					
-				}
-			}
-		}
-		
 	}
 
 	private int writeName(Row r, User u, int offset) {
@@ -195,27 +282,30 @@ public class Export implements BaseStgy {
 		r.createCell(0).setCellValue(u.getName());
 		r.createCell(1).setCellValue(u.getCvtype());
 		return offset + 2;
-	
+
 	}
-	
+
 	private int writeOrder(Row r, User u, int offset) {
 		String str = "";
 		List<Integer> mo = u.getMethodOrder().getOrder();
 		List<Integer> pto = u.getPageOrder().getOrder();
-		
+
 		List<Method> mlist = new ArrayList<Method>();
-		for(Integer i: mo){
+		for (Integer i : mo) {
 			mlist.add(Method.list.get(i));
 		}
 		List<PageType> ptlist = new ArrayList<PageType>();
-		for(Integer i: pto){
+		for (Integer i : pto) {
 			ptlist.add(PageType.list.get(i));
 		}
-		
-		for (Method m : mlist)
-			str += m.toString().toLowerCase() + " - ";
-		str = str.substring(0, str.length() - 3);
-		str += " & ";
+
+		if (u.isCVD()) {
+			for (Method m : mlist)
+				str += m.toString().toLowerCase() + " - ";
+			str = str.substring(0, str.length() - 3);
+			str += " & ";
+		}
+
 		for (PageType f : ptlist)
 			str += f.toString().toLowerCase() + " - ";
 		str = str.substring(0, str.length() - 3);
@@ -225,55 +315,125 @@ public class Export implements BaseStgy {
 		return offset + 1;
 	}
 
-	private int writeAnswers(Row r, User u, int offset){
-		int width = Method.length * PageType.length;
-		int q_offset = 0;
-		int q_offset_2 = 0;
-		for (Questionnaire qn: Questionnaire.list){
-			if(qn != Questionnaire.Questionnaire6){ // Every question will have 9 separate average value depending on the answer
-				for(Question q: qn.getQuestionList()){
-					// Calculate index by Method.ordinal * PageType.length + PageType.ordinal
-					float[] totals = new float[width];
-					int[] counts = new int[width];
-					
-					List<Answer> answers = as.getAnswers(u,q);
-					
-					for(Answer a: answers){
+	private int writeAnswers(Row r, User u, int offset) {
+		if (u.isCVD()) {
+			int width = Method.length * PageType.length;
+			int q_offset = 0;
+			int q_offset_2 = 0;
+			for (Questionnaire qn : Questionnaire.list) {
+				if (qn != Questionnaire.Questionnaire6) { // Every question will
+															// have 9 separate
+															// average value
+															// depending on the
+															// answer
+					for (Question q : qn.getQuestionList()) {
+						// Calculate index by Method.ordinal * PageType.length +
+						// PageType.ordinal
+						float[] totals = new float[width];
+						int[] counts = new int[width];
 
-						Method m = servlet.getUserservice().getMethod(u,a.getViewIndex() - 1);
-						PageType pt = servlet.getUserservice().getPageType(u,a.getViewIndex() - 1);
-					
-						totals[m.ordinal() * PageType.length + pt.ordinal()] += a.getValue();
-						counts[m.ordinal() * PageType.length + pt.ordinal()] += 1;
-						
-					}
-					for (int j = 0; j < width; j++) {
-						if (counts[j] != 0) {
-							Cell cell = r.createCell(offset + q_offset * 10 + j);
-							cell.setCellValue(totals[j] / counts[j]);
-							cell.setCellStyle(style_numeric);
+						List<Answer> answers = as.getAnswers(u, q);
+
+						for (Answer a : answers) {
+
+							Method m = servlet.getUserservice().getMethod(u,
+									a.getViewIndex() - 1);
+							PageType pt = servlet.getUserservice().getPageType(
+									u, a.getViewIndex() - 1);
+
+							totals[m.ordinal() * PageType.length + pt.ordinal()] += a
+									.getValue();
+							counts[m.ordinal() * PageType.length + pt.ordinal()] += 1;
+
 						}
+						for (int j = 0; j < width; j++) {
+							if (counts[j] != 0) {
+								Cell cell = r.createCell(offset + q_offset * 10
+										+ j);
+								cell.setCellValue(totals[j] / counts[j]);
+								cell.setCellStyle(style_numeric);
+							}
+						}
+						q_offset++;
 					}
-					q_offset++;
+				} else { // Last questionnaire is independent on webpage
+							// coloring
+
+					for (Question q : qn.getQuestionList()) {
+						// Calculate index by Method.ordinal * PageType.length +
+						// PageType.ordinal
+
+						List<Answer> answers = as.getAnswers(u, q);
+						Answer a = answers.get(0);
+
+						Cell cell = r.createCell(offset + q_offset * 10
+								+ q_offset_2 * 2);
+						cell.setCellValue(a.getValue());
+						cell.setCellStyle(style_numeric);
+						q_offset_2++;
+					}
 				}
 			}
-			else{ // Last questionnaire is independent on webpage coloring
-				
-				for(Question q: qn.getQuestionList()){
-					// Calculate index by Method.ordinal * PageType.length + PageType.ordinal
-					
-					List<Answer> answers = as.getAnswers(u,q);
-					Answer a = answers.get(0);
-					
-					Cell cell = r.createCell(offset + q_offset * 10 + q_offset_2 * 2);
-					cell.setCellValue(a.getValue());
-					cell.setCellStyle(style_numeric);
-					q_offset_2++;
+
+		} else {
+			int width = PageType.length;
+			int q_offset = 0;
+			int q_offset_2 = 0;
+			for (Questionnaire qn : Questionnaire.list) {
+				if (qn != Questionnaire.Questionnaire6) { // Every question will
+															// have 9 separate
+															// average value
+															// depending on the
+															// answer
+					for (Question q : qn.getQuestionList()) {
+						// Calculate index by Method.ordinal * PageType.length +
+						// PageType.ordinal
+						float[] totals = new float[width];
+						int[] counts = new int[width];
+
+						List<Answer> answers = as.getAnswers(u, q);
+
+						for (Answer a : answers) {
+
+							PageType pt = servlet.getUserservice().getPageType(
+									u, a.getViewIndex() - 1);
+
+							totals[pt.ordinal()] += a.getValue();
+							counts[pt.ordinal()] += 1;
+
+						}
+						for (int j = 0; j < width; j++) {
+							if (counts[j] != 0) {
+								Cell cell = r.createCell(offset + q_offset * 4
+										+ j);
+								cell.setCellValue(totals[j] / counts[j]);
+								cell.setCellStyle(style_numeric);
+							}
+						}
+						q_offset++;
+					}
+				} else { // Last questionnaire is independent on webpage
+							// coloring
+
+					for (Question q : qn.getQuestionList()) {
+						// Calculate index by Method.ordinal * PageType.length +
+						// PageType.ordinal
+
+						List<Answer> answers = as.getAnswers(u, q);
+						Answer a = answers.get(0);
+
+						Cell cell = r.createCell(offset + q_offset * 4
+								+ q_offset_2 * 2);
+						cell.setCellValue(a.getValue());
+						cell.setCellStyle(style_numeric);
+						q_offset_2++;
+					}
 				}
 			}
 		}
 		return offset;
 	}
+
 	private Cell createBoldCell(Row row, int col) {
 		Cell cell = row.createCell(col);
 		cell.setCellStyle(style_header);
@@ -297,6 +457,5 @@ public class Export implements BaseStgy {
 		Date date = new Date();
 		return df.format(date);
 	}
-
 
 }
